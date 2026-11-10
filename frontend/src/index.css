@@ -1,0 +1,240 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   设计令牌 —— 一屏之内只有三种底色：画面、卡片、内嵌块
+   浅色：暖白纸感   深色：墨黑石感   强调：墨绿
+   ============================================================ */
+@layer base {
+  :root {
+    --c-canvas: 250 249 247;
+    --c-surface: 255 255 255;
+    --c-subtle: 244 242 239;
+    --c-line: 232 229 224;
+    --c-ink: 26 24 22;
+    --c-muted: 122 116 110;
+    --c-accent: 13 148 136;
+    --c-accent-fg: 255 255 255;
+    --c-accent-soft: 236 251 248;
+    --c-danger: 220 77 65;
+  }
+
+  .dark {
+    --c-canvas: 14 13 12;
+    --c-surface: 24 22 20;
+    --c-subtle: 32 30 27;
+    --c-line: 45 42 38;
+    --c-ink: 246 244 241;
+    --c-muted: 160 154 147;
+    --c-accent: 45 212 191;
+    --c-accent-fg: 8 24 22;
+    --c-accent-soft: 17 62 58;
+    --c-danger: 248 113 113;
+  }
+
+  html {
+    color-scheme: light;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+
+  * {
+    @apply border-line;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+    font-variation-settings: 'opsz' 32;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgb(var(--c-accent) / 0.22);
+    color: rgb(var(--c-ink));
+  }
+
+  /* 细滚动条 */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--c-muted) / 0.28);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--c-muted) / 0.45);
+    background-clip: content-box;
+  }
+
+  textarea,
+  input,
+  button {
+    font: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-accent) / 0.55);
+    outline-offset: 2px;
+  }
+}
+
+/* ============================================================ */
+@layer components {
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-xl text-sm font-medium;
+    @apply transition-all duration-200 disabled:pointer-events-none disabled:opacity-40;
+  }
+
+  .btn-primary {
+    background: rgb(var(--c-accent));
+    color: rgb(var(--c-accent-fg));
+    @apply shadow-sm hover:brightness-[1.06] active:brightness-95;
+  }
+
+  .btn-ghost {
+    @apply text-muted hover:bg-subtle hover:text-ink;
+  }
+
+  .btn-outline {
+    @apply border border-line bg-surface text-ink hover:border-muted/40 hover:bg-subtle;
+  }
+
+  .icon-btn {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-xl text-muted;
+    @apply transition-colors duration-150 hover:bg-subtle hover:text-ink;
+    @apply disabled:pointer-events-none disabled:opacity-35;
+  }
+
+  .card {
+    @apply rounded-2xl border border-line bg-surface;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium leading-4;
+    background: rgb(var(--c-subtle));
+    color: rgb(var(--c-muted));
+  }
+
+  .kbd {
+    @apply rounded-md border border-line px-1.5 py-0.5 font-mono text-[10px] text-muted;
+    background: rgb(var(--c-canvas));
+  }
+
+  .divider {
+    @apply h-px w-full bg-line;
+  }
+
+  /* ---------- Markdown 正文 ---------- */
+  .prose-chat {
+    @apply text-[15px] leading-[1.75] text-ink;
+    word-break: break-word;
+  }
+  .prose-chat > * + * {
+    @apply mt-3;
+  }
+  .prose-chat h1 {
+    @apply mt-6 text-[19px] font-semibold tracking-tight;
+  }
+  .prose-chat h2 {
+    @apply mt-5 text-[17px] font-semibold tracking-tight;
+  }
+  .prose-chat h3 {
+    @apply mt-4 text-[15px] font-semibold;
+  }
+  .prose-chat p {
+    @apply my-2;
+  }
+  .prose-chat strong {
+    @apply font-semibold text-ink;
+  }
+  .prose-chat em {
+    @apply text-muted;
+  }
+  .prose-chat ul {
+    @apply my-2 list-disc space-y-1 pl-5 marker:text-muted/60;
+  }
+  .prose-chat ol {
+    @apply my-2 list-decimal space-y-1 pl-5 marker:text-muted/60;
+  }
+  .prose-chat li > ul,
+  .prose-chat li > ol {
+    @apply my-1;
+  }
+  .prose-chat blockquote {
+    @apply my-3 border-l-2 pl-4 text-muted;
+    border-color: rgb(var(--c-accent) / 0.5);
+  }
+  .prose-chat code {
+    @apply rounded-md px-1.5 py-0.5 font-mono text-[13px];
+    background: rgb(var(--c-subtle));
+    color: rgb(var(--c-ink));
+  }
+  .prose-chat pre {
+    @apply my-3 overflow-x-auto rounded-xl border border-line p-4 text-[13px];
+    background: rgb(var(--c-subtle));
+  }
+  .prose-chat pre code {
+    @apply bg-transparent p-0;
+  }
+  .prose-chat a {
+    color: rgb(var(--c-accent));
+    @apply underline decoration-1 underline-offset-2;
+  }
+  .prose-chat hr {
+    @apply my-5 border-line;
+  }
+  .prose-chat table {
+    @apply my-3 w-full border-collapse text-[14px];
+  }
+  .prose-chat th {
+    @apply border-b border-line px-3 py-2 text-left font-semibold;
+  }
+  .prose-chat td {
+    @apply border-b border-line/60 px-3 py-2 align-top;
+  }
+
+  /* ---------- 入场动画（不依赖 JS 的轻量版） ---------- */
+  .enter {
+    animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@layer utilities {
+  .scroll-thin {
+    scrollbar-width: thin;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  /* 顶部极淡的径向光晕，制造纸张受光感 */
+  .hero-glow::before {
+    content: '';
+    position: absolute;
+    inset: -40% 0 auto 0;
+    height: 520px;
+    pointer-events: none;
+    background: radial-gradient(
+      60% 100% at 50% 0%,
+      rgb(var(--c-accent) / 0.1) 0%,
+      rgb(var(--c-accent) / 0) 70%
+    );
+    z-index: 0;
+  }
+}
